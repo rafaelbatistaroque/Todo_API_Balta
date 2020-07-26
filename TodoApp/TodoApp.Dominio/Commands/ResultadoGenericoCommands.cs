@@ -1,4 +1,4 @@
-﻿using TodoApp.Dominio.Contracts;
+﻿using TodoApp.Dominio.Commands.Contracts;
 
 namespace TodoApp.Dominio.Commands
 {

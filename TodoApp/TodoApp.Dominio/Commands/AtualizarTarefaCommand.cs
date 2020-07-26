@@ -1,24 +1,25 @@
 ﻿using Flunt.Notifications;
 using Flunt.Validations;
 using System;
-using System.Windows.Input;
+using System.Collections.Generic;
+using System.Text;
 using TodoApp.Dominio.Commands.Contracts;
 
 namespace TodoApp.Dominio.Commands
 {
-    public class CriarTarefaCommand : Notifiable, ICommandBase
+    public class AtualizarTarefaCommand : Notifiable, ICommandBase
     {
-        public string Titulo { get; set; }
+        public Guid Id { get; set; }
         public string Usuario { get; set; }
-        public DateTime Data { get; set; }
+        public string Titulo { get; set; }
 
-        public CriarTarefaCommand() { }
+        public AtualizarTarefaCommand() { }
 
-        public CriarTarefaCommand(string titulo, string usuario, DateTime data)
+        public AtualizarTarefaCommand(Guid id, string usuario, string titulo)
         {
-            Titulo = titulo;
+            Id = id;
             Usuario = usuario;
-            Data = data;
+            Titulo = titulo;
         }
 
         public void Validate()
