@@ -10,8 +10,8 @@ using TodoApp.Infra.Contexts;
 namespace TodoApp.Infra.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20200726074301_inicial")]
-    partial class inicial
+    [Migration("20200727202516_Inicial")]
+    partial class Inicial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

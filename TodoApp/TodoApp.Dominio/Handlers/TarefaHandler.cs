@@ -15,10 +15,12 @@ namespace TodoApp.Dominio.Handlers
         IHandler<MarcarTarefaComoNaoConcluidaCommand>
     {
         private readonly ITarefaRepositorio _repositorio;
+        private readonly IUnitOfWork _uow;
 
-        public TarefaHandler(ITarefaRepositorio repositorio)
+        public TarefaHandler(ITarefaRepositorio repositorio, IUnitOfWork uow = null)
         {
             _repositorio = repositorio;
+            _uow = uow;
         }
 
         public ICommandResult Handle(CriarTarefaCommand command)
@@ -28,10 +30,18 @@ namespace TodoApp.Dominio.Handlers
                 return new ResultadoGenericoCommands(false, "Erro! Sua tarefa está errada.", command.Notifications);
 
             var tarefa = new Tarefa(command.Titulo, command.Data, command.Usuario);
+            try
+            {
+                _repositorio.Criar(tarefa);
+                _uow.Commit();
+                return new ResultadoGenericoCommands(true, "Sucesso! Tarefa salva.", tarefa);
 
-            _repositorio.Criar(tarefa);
-
-            return new ResultadoGenericoCommands(true, "Sucesso! Tarefa salva.", tarefa);
+            }
+            catch
+            {
+                _uow.Rollback();
+                return new ResultadoGenericoCommands(false, "Erro! Não foi possível criar a tarefa", command.Titulo);
+            }
         }
 
         public ICommandResult Handle(AtualizarTarefaCommand command)
@@ -40,13 +50,23 @@ namespace TodoApp.Dominio.Handlers
             if (command.Invalid)
                 return new ResultadoGenericoCommands(false, "Erro! Sua tarefa está errada.", command.Notifications);
 
-            Tarefa tarefa = _repositorio.Obter(command.Id, command.Usuario);
+            try
+            {
+                Tarefa tarefa = _repositorio.ObterTarefa(command.Id, command.Usuario);
 
-            tarefa.ModificarTitulo(command.Titulo);
+                tarefa.ModificarTitulo(command.Titulo);
 
-            _repositorio.Atualizar(tarefa);
+                _repositorio.Atualizar(tarefa);
 
-            return new ResultadoGenericoCommands(true, "Sucesso! Tarefa salva.", tarefa);
+                _uow.Commit();
+
+                return new ResultadoGenericoCommands(true, "Sucesso! Tarefa salva.", tarefa);
+            }
+            catch
+            {
+                _uow.Rollback();
+                return new ResultadoGenericoCommands(false, "Erro! Não foi possível atualizar a tarefa", command.Titulo);
+            }
         }
 
         public ICommandResult Handle(MarcarTarefaComoConcluidaCommand command)
@@ -55,13 +75,24 @@ namespace TodoApp.Dominio.Handlers
             if (command.Invalid)
                 return new ResultadoGenericoCommands(false, "Erro! Não foi possível concluir esta tarefa.", command.Notifications);
 
-            Tarefa tarefa = _repositorio.Obter(command.Id, command.Usuario);
+            try
+            {
+                Tarefa tarefa = _repositorio.ObterTarefa(command.Id, command.Usuario);
 
-            tarefa.MarcarComoConcluida();
+                tarefa.MarcarComoConcluida();
 
-            _repositorio.Atualizar(tarefa);
+                _repositorio.Atualizar(tarefa);
 
-            return new ResultadoGenericoCommands(true, "Sucesso! Tarefa salva.", tarefa);
+                _uow.Commit();
+
+                return new ResultadoGenericoCommands(true, "Sucesso! Tarefa salva.", tarefa);
+            }
+            catch 
+            {
+                _uow.Rollback();
+                return new ResultadoGenericoCommands(false, "Erro! Não foi possível atualizar sua tarefa");
+            }
+
         }
 
         public ICommandResult Handle(MarcarTarefaComoNaoConcluidaCommand command)
@@ -70,13 +101,23 @@ namespace TodoApp.Dominio.Handlers
             if (command.Invalid)
                 return new ResultadoGenericoCommands(false, "Erro! Não foi possível desmarcar esta tarefa.", command.Notifications);
 
-            Tarefa tarefa = _repositorio.Obter(command.Id, command.Usuario);
+            try
+            {
+                Tarefa tarefa = _repositorio.ObterTarefa(command.Id, command.Usuario);
 
-            tarefa.MarcarComoNaoConcluida();
+                tarefa.MarcarComoNaoConcluida();
 
-            _repositorio.Atualizar(tarefa);
+                _repositorio.Atualizar(tarefa);
 
-            return new ResultadoGenericoCommands(true, "Sucesso! Tarefa salva.", tarefa);
+                _uow.Commit();
+
+                return new ResultadoGenericoCommands(true, "Sucesso! Tarefa salva.", tarefa);
+            }
+            catch
+            {
+                _uow.Rollback();
+                return new ResultadoGenericoCommands(false, "Erro! Não foi possível atualizar sua tarefa.");
+            }
         }
     }
 }

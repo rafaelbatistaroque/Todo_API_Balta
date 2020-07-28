@@ -16,5 +16,11 @@ namespace TodoApp.Dominio.Commands
             Mensagem = mensagem;
             Dados = dados;
         }
+
+        public ResultadoGenericoCommands(bool sucesso, string mensagem)
+        {
+            Sucesso = sucesso;
+            Mensagem = mensagem;
+        }
     }
 }

@@ -1,7 +1,5 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using TodoApp.Dominio.Commands;
 using TodoApp.Dominio.Handlers;
 using TodoApp.Teste.Repositorios;
@@ -38,7 +36,7 @@ namespace TodoApp.Teste.HandlerTestes
         [TestMethod]
         public void DevePassarSeResultadoValido()
         {
-            _resultado =  _handler.Handle(_commandoValido) as ResultadoGenericoCommands;
+            _resultado = _handler.Handle(_commandoValido) as ResultadoGenericoCommands;
             Assert.AreEqual(_resultado.Sucesso, true);
         }
     }

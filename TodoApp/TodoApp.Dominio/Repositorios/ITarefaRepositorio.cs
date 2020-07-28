@@ -10,8 +10,11 @@ namespace TodoApp.Dominio.Repositorios
     {
         void Criar(Tarefa tarefa);
         void Atualizar(Tarefa tarefa);
-        Tarefa Obter(Guid id, string usuario);
-        IQueryable<Tarefa> Obter(string usuario);
-        IQueryable<Tarefa> Obter(Expression<Func<Tarefa, bool>> criterio, string usuario);
+        Tarefa ObterTarefa(Guid id, string usuario);
+        IQueryable<Tarefa> ObterTodas(string usuario);
+        IQueryable<Tarefa> ObterConcluidas(string usuario);
+        IQueryable<Tarefa> ObterNaoConcluidas(string usuario);
+        IQueryable<Tarefa> ObterPorPeriodo(string usuario, DateTime data, bool status);
+
     }
 }

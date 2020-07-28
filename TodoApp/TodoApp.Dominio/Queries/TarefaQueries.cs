@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Text;
 using TodoApp.Dominio.Entidades;
 
 namespace TodoApp.Dominio.Queries
@@ -15,7 +13,7 @@ namespace TodoApp.Dominio.Queries
 
         public static Expression<Func<Tarefa, bool>> ObterTodasConcluidas(string usuario)
         {
-            return x => x.Usuario == usuario && x.Feito;
+            return x => x.Usuario == usuario && x.Feito == true;
         }
 
         public static Expression<Func<Tarefa, bool>> ObterTodasNaoConcluidas(string usuario)
@@ -23,9 +21,14 @@ namespace TodoApp.Dominio.Queries
             return x => x.Usuario == usuario && x.Feito == false;
         }
 
-        public static Expression<Func<Tarefa, bool>> ObterTodasPorPeriodo(string usuario, DateTime data, bool statusConcluida)
+        public static Expression<Func<Tarefa, bool>> ObterTodasPorPeriodo(string usuario, DateTime data, bool status)
         {
-            return x => x.Usuario == usuario && x.Feito == statusConcluida && x.Data.Date == data;
+            return x => x.Usuario == usuario && x.Feito == status && x.Data.Date == data;
+        }
+
+        public static Expression<Func<Tarefa, bool>> ObterPorId(Guid id, string usuario)
+        {
+            return x => x.Usuario == usuario && x.Id == id;
         }
     }
 }
